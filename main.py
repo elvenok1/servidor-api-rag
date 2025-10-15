@@ -45,32 +45,26 @@ except Exception as e:
 # Inicializamos la aplicación FastAPI
 app = FastAPI()
 
-# --- 2. MODELOS DE DATOS ---
-# Esto define cómo deben ser las peticiones que llegan a nuestra API
-class SearchQuery(BaseModel):
-    question: str
-    top_k: int = 5  # Número de resultados a devolver por defecto
-
-# --- 3. ENDPOINT DE LA API ---
-@app.post("/buscar")
-async def buscar_en_documentacion(query: SearchQuery):
+# --- 2. ENDPOINT DE LA API ---
+@app.get("/buscar")
+async def buscar_en_documentacion(question: str, top_k: int = 5):
     """
     Recibe una pregunta, la convierte en un vector y busca en Qdrant.
     """
     if not model or not client:
         raise HTTPException(status_code=500, detail="El servidor no está inicializado correctamente (modelo o Qdrant no disponibles).")
     
-    print(f"Recibida pregunta: '{query.question}'")
+    print(f"Recibida pregunta: '{question}'")
     
     try:
         # Paso 1: Convertir la pregunta en un vector
-        vector_pregunta = model.encode(query.question).tolist()
+        vector_pregunta = model.encode(question).tolist()
         
         # Paso 2: Buscar en Qdrant
         search_result = client.search(
             collection_name=COLLECTION_NAME,
             query_vector=vector_pregunta,
-            limit=query.top_k,
+            limit=top_k,
             with_payload=True  # Para que nos devuelva el texto y la fuente
         )
         
