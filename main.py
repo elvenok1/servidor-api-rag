@@ -17,6 +17,7 @@ COLLECTION_NAME = "openpyxl_final_v2"
 MODEL_NAME = 'all-MiniLM-L6-v2'
 
 print("Cargando el modelo de embeddings... (Esto puede tardar un momento)")
+
 # Cargamos el modelo UNA SOLA VEZ al iniciar el servidor para máxima eficiencia
 try:
     model = SentenceTransformer(MODEL_NAME)
@@ -47,8 +48,8 @@ app = FastAPI()
 # --- 2. MODELOS DE DATOS ---
 # Esto define cómo deben ser las peticiones que llegan a nuestra API
 class SearchQuery(BaseModel):
-    pregunta: str
-    top_k: int = 3 # Número de resultados a devolver por defecto
+    question: str
+    top_k: int = 5  # Número de resultados a devolver por defecto
 
 # --- 3. ENDPOINT DE LA API ---
 @app.post("/buscar")
@@ -58,7 +59,7 @@ async def buscar_en_documentacion(query: SearchQuery):
     """
     if not model or not client:
         raise HTTPException(status_code=500, detail="El servidor no está inicializado correctamente (modelo o Qdrant no disponibles).")
-
+    
     print(f"Recibida pregunta: '{query.question}'")
     
     try:
@@ -70,7 +71,7 @@ async def buscar_en_documentacion(query: SearchQuery):
             collection_name=COLLECTION_NAME,
             query_vector=vector_pregunta,
             limit=query.top_k,
-            with_payload=True # Para que nos devuelva el texto y la fuente
+            with_payload=True  # Para que nos devuelva el texto y la fuente
         )
         
         print(f"Búsqueda completada. Se encontraron {len(search_result)} resultados.")
@@ -84,5 +85,4 @@ async def buscar_en_documentacion(query: SearchQuery):
 
 @app.get("/")
 def read_root():
-
     return {"status": "Servicio de búsqueda de OpenPyXL activo."}
