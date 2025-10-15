@@ -59,11 +59,11 @@ async def buscar_en_documentacion(query: SearchQuery):
     if not model or not client:
         raise HTTPException(status_code=500, detail="El servidor no está inicializado correctamente (modelo o Qdrant no disponibles).")
 
-    print(f"Recibida pregunta: '{query.pregunta}'")
+    print(f"Recibida pregunta: '{query.question}'")
     
     try:
         # Paso 1: Convertir la pregunta en un vector
-        vector_pregunta = model.encode(query.pregunta).tolist()
+        vector_pregunta = model.encode(query.question).tolist()
         
         # Paso 2: Buscar en Qdrant
         search_result = client.search(
@@ -84,4 +84,5 @@ async def buscar_en_documentacion(query: SearchQuery):
 
 @app.get("/")
 def read_root():
+
     return {"status": "Servicio de búsqueda de OpenPyXL activo."}
