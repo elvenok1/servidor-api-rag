@@ -13,16 +13,13 @@ warnings.filterwarnings("ignore", category=urllib3.exceptions.InsecureRequestWar
 # --- 1. CONFIGURACIÓN MEJORADA ---
 QDRANT_IP = os.getenv("QDRANT_IP", "209.126.82.74")
 QDRANT_HOSTNAME = os.getenv("QDRANT_HOSTNAME", "soluciones-qdrant.vh0e8b.easypanel.host")
-# !! CAMBIO CLAVE 1: Apuntamos a la nueva y correcta colección !!
 COLLECTION_NAME = "openpyxl_semantic_v2" 
 MODEL_NAME = 'all-MiniLM-L6-v2'
 
-# !! CAMBIO CLAVE 2: Forzar un directorio de caché local para el modelo !!
-# Esto soluciona problemas de estado y permisos en entornos de servidor.
-cache_dir = os.path.join(os.getcwd(), ".cache")
-os.makedirs(cache_dir, exist_ok=True)
-os.environ['SENTENCE_TRANSFORMERS_HOME'] = cache_dir
-print(f"Usando el directorio de caché para el modelo: {cache_dir}")
+# !! CAMBIO DEFINITIVO: Usar una ruta ABSOLUTA que coincida con el montaje de volumen !!
+CACHE_DIR = "/app/.cache" 
+os.environ['SENTENCE_TRANSFORMERS_HOME'] = CACHE_DIR
+print(f"Directorio de caché para el modelo configurado en: {CACHE_DIR}")
 
 # --- Carga de recursos globales ---
 model = None
@@ -98,3 +95,4 @@ async def search_documentation(question: str, top_k: int = 3):
 @app.get("/")
 def read_root():
     return {"status": "Servicio de búsqueda de OpenPyXL activo."}
+
