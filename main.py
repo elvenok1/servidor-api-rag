@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore", category=urllib3.exceptions.InsecureRequestWar
 # --- 1. CONFIGURACIÓN (Debe ser idéntica a la del script de indexación) ---
 QDRANT_IP = os.getenv("QDRANT_IP", "209.126.82.74")
 QDRANT_HOSTNAME = os.getenv("QDRANT_HOSTNAME", "soluciones-qdrant.vh0e8b.easypanel.host")
-COLLECTION_NAME = "openpyxl_semantic_v3" 
-MODEL_NAME = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+COLLECTION_NAME = "openpyxl_semantic_v4" 
+MODEL_NAME = 'Xenova/all-MiniLM-L6-v2'
 CACHE_DIR = "/app/.cache" 
 os.environ['SENTENCE_TRANSFORMERS_HOME'] = CACHE_DIR
 print(f"Directorio de caché para el modelo configurado en: {CACHE_DIR}")
@@ -137,6 +137,7 @@ async def search_documentation(question: str, top_k: int = 3):
 @app.get("/")
 def read_root():
     return {"status": "Servicio de búsqueda de OpenPyXL activo."}
+
 
 
 
