@@ -16,7 +16,7 @@ QDRANT_HOSTNAME = os.getenv("QDRANT_HOSTNAME", "soluciones-qdrant.vh0e8b.easypan
 
 # Usamos el modelo y la colección consistentes con la estrategia simplificada
 MODEL_NAME = 'sentence-transformers/all-MiniLM-L6-v2'
-COLLECTION_NAME = "openpyxl_semantic_v6" 
+COLLECTION_NAME = "openpyxl_semantic_v7" 
 
 # <<< ¡CLAVE PARA SERVIDOR! Hacemos que el modelo se guarde en el volumen persistente.
 CACHE_DIR = "/app/.cache" 
@@ -99,3 +99,4 @@ async def search_documentation(question: str, top_k: int = 3):
 @app.get("/")
 def read_root():
     return {"status": "Servicio de búsqueda de OpenPyXL activo."}
+
